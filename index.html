@@ -2,63 +2,121 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>SHINOBI DESIGNER PRO - ULTRA PRECISION V4</title>
+    <title>SHINOBI DESIGNER ULTIME - MASTER EDITION</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        /* VARIABLES DE PRECISION */
+        /* CONFIGURATION DES VARIABLES PAR DÉFAUT */
         :root {
-            --text-color: #3e2723; --stat-color: #3e2723;
-            --name-top: 345px; --name-left: 250px; --name-size: 28px; --name-space: 0px;
-            --rank-top: 398px; --rank-left: 250px; --rank-size: 22px; --rank-space: 0px;
-            --av-top: 230px; --av-left: 250px; --av-w: 300px; --av-h: auto;
+            --text-color: #3e2723;
+            --stat-color: #3e2723;
+            
+            /* Avatar */
+            --av-top: 230px; --av-left: 250px; 
+            --av-w: 300px; --av-h: auto;
             --av-bright: 100%; --av-gray: 0%; --av-contrast: 100%;
-            --sl-top: 488px; --sl-left: 175px; --sl-size: 8px; --sl-gap-h: 2.5px; --sl-gap-v: 31px;
-            --sd-top: 488px; --sd-left: 395px; --sd-size: 8px; --sd-gap-h: 2.5px; --sd-gap-v: 31px;
+            
+            /* Nom */
+            --name-top: 345px; --name-left: 250px; 
+            --name-size: 28px; --name-space: 0px;
+            
+            /* Rang */
+            --rank-top: 398px; --rank-left: 250px; 
+            --rank-size: 22px; --rank-space: 0px;
+            
+            /* Stats Gauche */
+            --sl-top: 488px; --sl-left: 175px; 
+            --sl-size: 8px; --sl-gap-h: 2.5px; --sl-gap-v: 31px;
+            
+            /* Stats Droite */
+            --sd-top: 488px; --sd-left: 395px; 
+            --sd-size: 8px; --sd-gap-h: 2.5px; --sd-gap-v: 31px;
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { background: #050505; color: #dcdcdc; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; }
+        body { 
+            background: #080808; color: #f0f0f0; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; display: flex; height: 100vh; overflow: hidden; 
+        }
 
-        /* SIDEBAR PRO */
-        .sidebar { width: 450px; background: #111; border-right: 2px solid #222; display: flex; flex-direction: column; z-index: 100; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
-        .sidebar-header { padding: 25px; background: #1a1a1a; border-bottom: 2px solid #ff9800; text-align: center; }
-        .sidebar-header h1 { margin: 0; font-size: 20px; color: #ff9800; letter-spacing: 3px; text-transform: uppercase; }
-        .sidebar-content { flex-grow: 1; overflow-y: scroll; padding: 20px; }
+        /* --- INTERFACE DE CONTRÔLE (SIDEBAR) --- */
+        .sidebar { 
+            width: 480px; background: #121212; 
+            border-right: 3px solid #ff9800; 
+            display: flex; flex-direction: column;
+            box-shadow: 15px 0 35px rgba(0,0,0,0.7);
+            z-index: 100;
+        }
+
+        .sidebar-header { 
+            padding: 30px; background: #1a1a1a; 
+            text-align: center; border-bottom: 1px solid #333;
+        }
+        .sidebar-header h1 { 
+            margin: 0; font-size: 22px; color: #ff9800; 
+            letter-spacing: 4px; text-transform: uppercase; 
+            text-shadow: 0 0 10px rgba(255,152,0,0.3);
+        }
+
+        .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 25px; }
+        .sidebar-scroll::-webkit-scrollbar { width: 8px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        /* Panneaux de réglages */
+        .panel { 
+            background: #1c1c1c; border-radius: 12px; border: 1px solid #2a2a2a;
+            padding: 20px; margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .panel-title { 
+            font-size: 13px; font-weight: 800; color: #ff9800; 
+            text-transform: uppercase; margin-bottom: 15px; 
+            display: flex; align-items: center; gap: 12px;
+            border-bottom: 1px solid #333; padding-bottom: 8px;
+        }
+
+        label { font-size: 11px; color: #aaa; display: block; margin-top: 15px; font-weight: bold; }
+        .val-display { float: right; color: #ff9800; font-family: monospace; }
+
+        /* Contrôles */
+        .input-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+        input[type="range"] { flex-grow: 1; accent-color: #ff9800; cursor: pointer; height: 5px; }
+        input[type="color"] { background: none; border: none; width: 40px; height: 40px; cursor: pointer; padding: 0; }
         
-        /* SCROLLBAR CUSTOM */
-        .sidebar-content::-webkit-scrollbar { width: 6px; }
-        .sidebar-content::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        .btn-fine { 
+            background: #333; border: 1px solid #444; color: #fff; 
+            width: 35px; height: 35px; cursor: pointer; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-fine:hover { background: #ff9800; color: #000; transform: scale(1.1); }
 
-        .panel { background: #181818; border-radius: 12px; border: 1px solid #282828; padding: 18px; margin-bottom: 20px; }
-        .panel-h { font-size: 12px; font-weight: 800; color: #ff9800; text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        
-        label { font-size: 11px; color: #888; display: block; margin-top: 12px; font-weight: 600; }
-        .unit { float: right; color: #555; font-style: normal; }
+        .btn-capture { 
+            width: 100%; padding: 22px; background: #d32f2f; color: #fff; 
+            border: none; border-radius: 12px; font-weight: 900; font-size: 18px; 
+            cursor: pointer; margin-bottom: 20px; text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(211, 47, 47, 0.3);
+            transition: 0.3s;
+        }
+        .btn-capture:hover { background: #f44336; transform: translateY(-3px); box-shadow: 0 15px 25px rgba(244, 67, 54, 0.4); }
 
-        /* CONTROLS */
-        .ctrl-group { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
-        input[type="range"] { flex-grow: 1; accent-color: #ff9800; cursor: pointer; height: 4px; }
-        input[type="color"] { background: none; border: none; width: 35px; height: 35px; cursor: pointer; padding: 0; }
-        
-        .btn-precise { background: #252525; border: 1px solid #333; color: #fff; width: 32px; height: 32px; cursor: pointer; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .btn-precise:hover { background: #ff9800; border-color: #ff9800; color: #000; }
+        /* --- ZONE DE VISUALISATION (VIEWER) --- */
+        .viewer { 
+            flex-grow: 1; display: flex; align-items: center; justify-content: center; 
+            background: radial-gradient(circle, #151515 0%, #000 100%);
+        }
 
-        .btn-download { width: 100%; padding: 20px; background: #c62828; color: #fff; border: none; border-radius: 10px; font-weight: 900; font-size: 16px; cursor: pointer; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-        .btn-download:hover { background: #f44336; box-shadow: 0 0 20px rgba(244, 67, 54, 0.4); transform: translateY(-2px); }
-
-        /* VIEWER */
-        .viewer { flex-grow: 1; display: flex; align-items: center; justify-content: center; background: #000; perspective: 1000px; }
-        
-        /* LA CARTE (Capture Area) */
-        .card-body {
+        /* Conteneur de la carte */
+        #main-card {
             position: relative; width: 500px; height: 730px;
             background-image: url('carte.jpg'); background-size: 100% 100%;
             overflow: hidden; background-color: #fff;
-            box-shadow: 0 20px 80px rgba(0,0,0,0.8);
+            box-shadow: 0 30px 100px rgba(0,0,0,0.9);
         }
 
-        #avatar-layer { 
+        #avatar-element { 
             position: absolute; top: var(--av-top); left: var(--av-left);
             width: var(--av-w); height: var(--av-h);
             transform: translate(-50%, -50%); z-index: 1;
@@ -66,221 +124,264 @@
             pointer-events: none;
         }
 
-        /* CHAMPS TEXTE FIXÉS */
-        .sync-text { 
+        /* TEXTES - Utilisation de classes fixes pour html2canvas */
+        .card-text { 
             position: absolute; background: transparent !important; border: none !important; 
-            text-align: center; outline: none; z-index: 10; transform: translate(-50%, -50%);
-            color: var(--text-color); font-weight: bold; white-space: nowrap; overflow: visible;
+            text-align: center; outline: none; z-index: 50; transform: translate(-50%, -50%);
+            color: var(--text-color); font-weight: bold; padding: 0; margin: 0;
+            display: flex; align-items: center; justify-content: center;
         }
         #name-field { 
             top: var(--name-top); left: var(--name-left); 
-            font-family: 'Algerian', 'Times New Roman', serif; 
-            font-size: var(--name-size); letter-spacing: var(--name-space); width: 480px; 
+            font-family: 'Algerian', serif; font-size: var(--name-size); 
+            letter-spacing: var(--name-space); width: 480px; 
         }
         #rank-field { 
             top: var(--rank-top); left: var(--rank-left); 
-            font-family: 'Agency FB', 'Arial', sans-serif; 
-            font-size: var(--rank-size); letter-spacing: var(--rank-space); width: 400px; 
+            font-family: 'Agency FB', sans-serif; font-size: var(--rank-size); 
+            letter-spacing: var(--rank-space); width: 400px; 
         }
 
-        /* STATS LAYERS */
-        .stats-wrap { position: absolute; display: flex; flex-direction: column; z-index: 20; }
-        .wrap-l { top: var(--sl-top); left: var(--sl-left); gap: var(--sl-gap-v); }
-        .wrap-r { top: var(--sd-top); left: var(--sd-left); gap: var(--sd-gap-v); }
+        /* STATS */
+        .stats-block { position: absolute; display: flex; flex-direction: column; z-index: 60; }
+        .block-l { top: var(--sl-top); left: var(--sl-left); gap: var(--sl-gap-v); }
+        .block-r { top: var(--sd-top); left: var(--sd-left); gap: var(--sd-gap-v); }
 
-        .row-s { display: flex; align-items: center; }
-        .pixel { border: 1px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.1); cursor: pointer; transition: 0.1s; }
+        .stat-row { display: flex; align-items: center; }
+        .stat-square { border: 1px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.05); cursor: pointer; }
         
-        .pixel.sl { width: var(--sl-size); height: var(--sl-size); margin-right: var(--sl-gap-h); }
-        .pixel.sd { width: var(--sd-size); height: var(--sd-size); margin-right: var(--sd-gap-h); }
-        .pixel.on { background: var(--stat-color) !important; box-shadow: inset 0 0 2px rgba(0,0,0,0.3); }
+        .stat-square.sl { width: var(--sl-size); height: var(--sl-size); margin-right: var(--sl-gap-h); }
+        .stat-square.sd { width: var(--sd-size); height: var(--sd-size); margin-right: var(--sd-gap-h); }
+        
+        .stat-square.filled { background: var(--stat-color) !important; }
 
     </style>
 </head>
 <body>
 
-<div class="sidebar">
-    <div class="sidebar-header">
-        <h1>DESIGNER ULTIME</h1>
-    </div>
-    
-    <div class="sidebar-content">
-        <button class="btn-download" onclick="exportFullHD()">
-            <i class="fa-solid fa-cloud-arrow-down"></i> Télécharger (Rendu HD)
-        </button>
-
-        <div class="panel">
-            <div class="panel-h"><i class="fa-solid fa-image-portrait"></i> Portrait du Shinobi</div>
-            <input type="file" id="imgIn" style="width:100%; font-size:10px;">
-            
-            <label>Position Verticale <i class="unit" id="v-avt">0</i></label>
-            <div class="ctrl-group">
-                <button class="btn-precise" onclick="move('--av-top', -0.5)">-</button>
-                <input type="range" min="0" max="730" step="0.5" value="230" oninput="set('--av-top', this.value+'px', 'v-avt')">
-                <button class="btn-precise" onclick="move('--av-top', 0.5)">+</button>
-            </div>
-
-            <label>Largeur Image <i class="unit" id="v-avw">300</i></label>
-            <input type="range" min="50" max="600" step="1" value="300" oninput="set('--av-w', this.value+'px', 'v-avw')">
-
-            <label>Luminosité & Contraste</label>
-            <div class="ctrl-group">
-                <input type="range" min="0" max="200" value="100" oninput="set('--av-bright', this.value+'%')">
-                <input type="range" min="0" max="200" value="100" oninput="set('--av-contrast', this.value+'%')">
-            </div>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1><i class="fa-solid fa-dragon"></i> NINJA CANVAS PRO</h1>
         </div>
 
-        <div class="panel">
-            <div class="panel-h"><i class="fa-solid fa-signature"></i> Nom du Ninja</div>
-            <label>Couleurs (Global)</label>
-            <div class="ctrl-group">
-                <input type="color" value="#3e2723" oninput="set('--text-color', this.value); set('--stat-color', this.value)">
-                <span style="font-size:10px; color:#666">Appliquer à tout</span>
+        <div class="sidebar-scroll">
+            <button class="btn-capture" onclick="generateHighResPNG()">
+                <i class="fa-solid fa-file-export"></i> EXPORTER LA FICHE
+            </button>
+
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-palette"></i> Couleurs & Style</div>
+                <label>Couleur Générale (Texte & Stats)</label>
+                <div class="input-row">
+                    <input type="color" value="#3e2723" oninput="updateVar('--text-color', this.value); updateVar('--stat-color', this.value)">
+                    <span style="font-size: 10px; color:#777;">S'applique aux textes et aux carrés</span>
+                </div>
             </div>
 
-            <label>Taille Police & Espacement</label>
-            <div class="ctrl-group">
-                <input type="range" min="10" max="80" step="0.5" value="28" oninput="set('--name-size', this.value+'px')">
-                <input type="range" min="-5" max="20" step="0.5" value="0" oninput="set('--name-space', this.value+'px')">
-            </div>
-
-            <label>Position Verticale Précise</label>
-            <div class="ctrl-group">
-                <button class="btn-precise" onclick="move('--name-top', -0.2)">↑</button>
-                <input type="range" min="0" max="730" step="0.2" value="345" oninput="set('--name-top', this.value+'px')">
-                <button class="btn-precise" onclick="move('--name-top', 0.2)">↓</button>
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-h"><i class="fa-solid fa-list-ol"></i> Statistiques Gauche</div>
-            <label>Position du bloc (X / Y)</label>
-            <div class="ctrl-group">
-                <input type="range" min="0" max="500" step="0.5" value="175" oninput="set('--sl-left', this.value+'px')">
-                <input type="range" min="0" max="730" step="0.5" value="488" oninput="set('--sl-top', this.value+'px')">
-            </div>
-            
-            <label>Écart Horizontal <i class="unit" id="v-slh">2.5</i></label>
-            <input type="range" min="0" max="15" step="0.1" value="2.5" oninput="set('--sl-gap-h', this.value+'px', 'v-slh')">
-            
-            <label>Écart Vertical <i class="unit" id="v-slv">31</i></label>
-            <input type="range" min="10" max="60" step="0.5" value="31" oninput="set('--sl-gap-v', this.value+'px', 'v-slv')">
-        </div>
-
-        <div class="panel">
-            <div class="panel-h"><i class="fa-solid fa-list-ol"></i> Statistiques Droite</div>
-            <label>Position du bloc (X / Y)</label>
-            <div class="ctrl-group">
-                <input type="range" min="0" max="500" step="0.5" value="395" oninput="set('--sd-left', this.value+'px')">
-                <input type="range" min="0" max="730" step="0.5" value="488" oninput="set('--sd-top', this.value+'px')">
-            </div>
-
-            <label>Écart Horizontal <i class="unit" id="v-sdh">2.5</i></label>
-            <input type="range" min="0" max="15" step="0.1" value="2.5" oninput="set('--sd-gap-h', this.value+'px', 'v-sdh')">
-            
-            <label>Écart Vertical <i class="unit" id="v-sdv">31</i></label>
-            <input type="range" min="10" max="60" step="0.5" value="31" oninput="set('--sd-gap-v', this.value+'px', 'v-sdv')">
-        </div>
-    </div>
-</div>
-
-<div class="viewer">
-    <div id="capture-area" class="card-body">
-        <img id="avatar-layer" src="">
-        <input type="text" id="name-field" class="sync-text" value="NOM DU NINJA">
-        <input type="text" id="rank-field" class="sync-text" value="RANG S - KAGE">
-        <div class="stats-wrap wrap-l" id="l-box"></div>
-        <div class="stats-wrap wrap-r" id="r-box"></div>
-    </div>
-</div>
-
-<script>
-    const root = document.documentElement;
-
-    // GENERATEUR DE STATS
-    function createGrid(boxId, counts, type, sizeVar) {
-        const box = document.getElementById(boxId);
-        counts.forEach(num => {
-            const row = document.createElement('div');
-            row.className = 'row-s';
-            for(let i=0; i<num; i++) {
-                const p = document.createElement('div');
-                p.className = `pixel ${type}`;
-                p.onclick = function() {
-                    const siblings = row.querySelectorAll('.pixel');
-                    const idx = Array.from(siblings).indexOf(this);
-                    siblings.forEach((s, sIdx) => s.classList.toggle('on', sIdx <= idx));
-                };
-                row.appendChild(p);
-            }
-            box.appendChild(row);
-        });
-    }
-    createGrid('l-box', [5,5,5], 'sl', '--sl-size');
-    createGrid('r-box', [6,6,6], 'sd', '--sd-size');
-
-    // UPLOAD IMAGE
-    document.getElementById('imgIn').onchange = function(e) {
-        const r = new FileReader();
-        r.onload = (ev) => { document.getElementById('avatar-layer').src = ev.target.result; };
-        r.readAsDataURL(e.target.files[0]);
-    };
-
-    // CONTROLES
-    function set(p, v, unitId) { 
-        root.style.setProperty(p, v); 
-        if(unitId) document.getElementById(unitId).innerText = parseFloat(v);
-    }
-    
-    function move(p, d) {
-        const c = parseFloat(getComputedStyle(root).getPropertyValue(p)) || 0;
-        const newVal = (c + d).toFixed(1);
-        root.style.setProperty(p, newVal + 'px');
-    }
-
-    // --- FONCTION D'EXPORTATION ULTIME (ANTI-DECALAGE) ---
-    function exportFullHD() {
-        const area = document.getElementById('capture-area');
-        
-        // On remplace temporairement les Input par des Span pour le rendu exact des polices
-        const nameVal = document.getElementById('name-field').value;
-        const rankVal = document.getElementById('rank-field').value;
-        
-        // Option html2canvas pour une précision chirurgicale
-        html2canvas(area, {
-            scale: 4, // Ultra HD
-            useCORS: true,
-            allowTaint: true,
-            letterRendering: true,
-            backgroundColor: null,
-            onclone: (clonedDoc) => {
-                // Dans la copie de rendu, on s'assure que le texte est traité comme du texte pur
-                const n = clonedDoc.getElementById('name-field');
-                const r = clonedDoc.getElementById('rank-field');
-                n.style.display = 'none';
-                r.style.display = 'none';
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-user-tag"></i> Configuration du Nom</div>
+                <label>Taille du texte <span class="val-display" id="d-name-size">28px</span></label>
+                <input type="range" min="10" max="80" step="0.5" value="28" oninput="updateVar('--name-size', this.value+'px', 'd-name-size')">
                 
-                // Créer des clones visuels parfaits
-                const nClone = document.createElement('div');
-                nClone.innerText = nameVal;
-                nClone.className = "sync-text";
-                nClone.style.cssText = n.style.cssText + "; display:block; border:none;";
+                <label>Espacement des lettres</label>
+                <input type="range" min="-5" max="25" step="0.5" value="0" oninput="updateVar('--name-space', this.value+'px')">
+
+                <label>Position Verticale & Horizontale</label>
+                <div class="input-row">
+                    <button class="btn-fine" onclick="adjust('--name-top', -0.5)">↑</button>
+                    <button class="btn-fine" onclick="adjust('--name-top', 0.5)">↓</button>
+                    <input type="range" min="0" max="730" step="0.5" value="345" oninput="updateVar('--name-top', this.value+'px')">
+                </div>
+                <div class="input-row">
+                    <button class="btn-fine" onclick="adjust('--name-left', -0.5)">←</button>
+                    <button class="btn-fine" onclick="adjust('--name-left', 0.5)">→</button>
+                    <input type="range" min="0" max="500" step="0.5" value="250" oninput="updateVar('--name-left', this.value+'px')">
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-medal"></i> Configuration du Rang</div>
+                <label>Taille du texte <span class="val-display" id="d-rank-size">22px</span></label>
+                <input type="range" min="10" max="60" step="0.5" value="22" oninput="updateVar('--rank-size', this.value+'px', 'd-rank-size')">
                 
-                const rClone = document.createElement('div');
-                rClone.innerText = rankVal;
-                rClone.className = "sync-text";
-                rClone.style.cssText = r.style.cssText + "; display:block; border:none;";
+                <label>Espacement des lettres</label>
+                <input type="range" min="-5" max="25" step="0.5" value="0" oninput="updateVar('--rank-space', this.value+'px')">
+
+                <label>Position Verticale & Horizontale</label>
+                <div class="input-row">
+                    <button class="btn-fine" onclick="adjust('--rank-top', -0.5)">↑</button>
+                    <button class="btn-fine" onclick="adjust('--rank-top', 0.5)">↓</button>
+                    <input type="range" min="0" max="730" step="0.5" value="398" oninput="updateVar('--rank-top', this.value+'px')">
+                </div>
+                <div class="input-row">
+                    <button class="btn-fine" onclick="adjust('--rank-left', -0.5)">←</button>
+                    <button class="btn-fine" onclick="adjust('--rank-left', 0.5)">→</button>
+                    <input type="range" min="0" max="500" step="0.5" value="250" oninput="updateVar('--rank-left', this.value+'px')">
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-camera-retro"></i> Portrait Ninja</div>
+                <input type="file" id="imgLoad" style="width:100%; font-size:11px; margin-top:10px;">
                 
-                n.parentNode.appendChild(nClone);
-                r.parentNode.appendChild(rClone);
-            }
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `Shinobi_${nameVal.replace(/\s+/g, '_')}.png`;
-            link.href = canvas.toDataURL("image/png", 1.0);
-            link.click();
-        });
-    }
-</script>
+                <label>Largeur de l'image</label>
+                <input type="range" min="50" max="600" step="1" value="300" oninput="updateVar('--av-w', this.value+'px')">
+
+                <label>Position de l'image</label>
+                <div class="input-row">
+                    <button class="btn-fine" onclick="adjust('--av-top', -2)">↑</button>
+                    <button class="btn-fine" onclick="adjust('--av-top', 2)">↓</button>
+                    <button class="btn-fine" onclick="adjust('--av-left', -2)">←</button>
+                    <button class="btn-fine" onclick="adjust('--av-left', 2)">→</button>
+                </div>
+                
+                <label>Luminosité / Gris / Contraste</label>
+                <input type="range" min="0" max="200" value="100" oninput="updateVar('--av-bright', this.value+'%')">
+                <input type="range" min="0" max="100" value="0" oninput="updateVar('--av-gray', this.value+'%')">
+            </div>
+
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-sliders"></i> Bloc Stats Gauche</div>
+                <label>Écart Horizontal <span class="val-display" id="d-sl-gap">2.5px</span></label>
+                <input type="range" min="0" max="25" step="0.1" value="2.5" oninput="updateVar('--sl-gap-h', this.value+'px', 'd-sl-gap')">
+                
+                <label>Écart Vertical (Lignes)</label>
+                <input type="range" min="10" max="60" step="0.5" value="31" oninput="updateVar('--sl-gap-v', this.value+'px')">
+                
+                <label>Position du bloc</label>
+                <div class="input-row">
+                    <button class="btn-fine" onclick="adjust('--sl-top', -1)">↑</button>
+                    <button class="btn-fine" onclick="adjust('--sl-top', 1)">↓</button>
+                    <button class="btn-fine" onclick="adjust('--sl-left', -1)">←</button>
+                    <button class="btn-fine" onclick="adjust('--sl-left', 1)">→</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-sliders"></i> Bloc Stats Droite</div>
+                <label>Écart Horizontal <span class="val-display" id="d-sd-gap">2.5px</span></label>
+                <input type="range" min="0" max="25" step="0.1" value="2.5" oninput="updateVar('--sd-gap-h', this.value+'px', 'd-sd-gap')">
+                
+                <label>Écart Vertical (Lignes)</label>
+                <input type="range" min="10" max="60" step="0.5" value="31" oninput="updateVar('--sd-gap-v', this.value+'px')">
+
+                <label>Position du bloc</label>
+                <div class="input-row">
+                    <button class="btn-fine" onclick="adjust('--sd-top', -1)">↑</button>
+                    <button class="btn-fine" onclick="adjust('--sd-top', 1)">↓</button>
+                    <button class="btn-fine" onclick="adjust('--sd-left', -1)">←</button>
+                    <button class="btn-fine" onclick="adjust('--sd-left', 1)">→</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="viewer">
+        <div id="main-card">
+            <img id="avatar-element" src="">
+            <input type="text" id="name-field" class="card-text" value="NOM DU NINJA">
+            <input type="text" id="rank-field" class="card-text" value="RANG S - KAGE">
+            
+            <div class="stats-block block-l" id="l-side-box"></div>
+            <div class="stats-block block-r" id="r-side-box"></div>
+        </div>
+    </div>
+
+    <script>
+        const root = document.documentElement;
+
+        // 1. Initialisation des grilles de statistiques
+        function buildStats(containerId, rowConfig, squareClass, sizeVar) {
+            const container = document.getElementById(containerId);
+            rowConfig.forEach(num => {
+                const row = document.createElement('div');
+                row.className = 'stat-row';
+                for(let i=0; i<num; i++) {
+                    const sq = document.createElement('div');
+                    sq.className = `stat-square ${squareClass}`;
+                    // Interaction clic pour remplir
+                    sq.onclick = function() {
+                        const allSq = row.querySelectorAll('.stat-square');
+                        const index = Array.from(allSq).indexOf(this);
+                        allSq.forEach((s, idx) => s.classList.toggle('filled', idx <= index));
+                    };
+                    row.appendChild(sq);
+                }
+                container.appendChild(row);
+            });
+        }
+        buildStats('l-side-box', [5,5,5], 'sl', '--sl-size');
+        buildStats('r-side-box', [6,6,6], 'sd', '--sd-size');
+
+        // 2. Chargement de l'image
+        document.getElementById('imgLoad').onchange = function(e) {
+            const r = new FileReader();
+            r.onload = (ev) => { document.getElementById('avatar-element').src = ev.target.result; };
+            r.readAsDataURL(e.target.files[0]);
+        };
+
+        // 3. Fonctions de mise à jour des variables
+        function updateVar(prop, val, displayId) {
+            root.style.setProperty(prop, val);
+            if(displayId) document.getElementById(displayId).innerText = val;
+        }
+
+        function adjust(prop, delta) {
+            const current = parseFloat(getComputedStyle(root).getPropertyValue(prop)) || 0;
+            const newVal = (current + delta).toFixed(1);
+            root.style.setProperty(prop, newVal + 'px');
+        }
+
+        // 4. --- FONCTION D'EXPORTATION MAÎTRESSE (ANTI-BUG) ---
+        function generateHighResPNG() {
+            const card = document.getElementById('main-card');
+            const nameIn = document.getElementById('name-field');
+            const rankIn = document.getElementById('rank-field');
+
+            // ON FORCE LE RENDU PARFAIT
+            html2canvas(card, {
+                scale: 4, // Ultra haute définition
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null,
+                logging: false,
+                onclone: (clonedDoc) => {
+                    // RÉPARATION CRITIQUE : Convertir les Inputs en Divs statiques pour html2canvas
+                    const clonedName = clonedDoc.getElementById('name-field');
+                    const clonedRank = clonedDoc.getElementById('rank-field');
+
+                    // On crée des substituts textuels qui ne buggent pas au rendu
+                    const nameDiv = clonedDoc.createElement('div');
+                    nameDiv.innerText = nameIn.value;
+                    nameDiv.className = "card-text";
+                    // On copie TOUT le style calculé pour être sûr
+                    nameDiv.style.cssText = getComputedStyle(nameIn).cssText + "; display:flex !important; border:none;";
+                    
+                    const rankDiv = clonedDoc.createElement('div');
+                    rankDiv.innerText = rankIn.value;
+                    rankDiv.className = "card-text";
+                    rankDiv.style.cssText = getComputedStyle(rankIn).cssText + "; display:flex !important; border:none;";
+
+                    // Remplacer les inputs par les divs dans la copie de capture
+                    clonedName.replaceWith(nameDiv);
+                    clonedRank.replaceWith(rankDiv);
+
+                    // RÉPARATION DES STATS : On s'assure que les couleurs sont fixées
+                    const statColor = getComputedStyle(root).getPropertyValue('--stat-color');
+                    clonedDoc.querySelectorAll('.filled').forEach(el => {
+                        el.style.backgroundColor = statColor;
+                    });
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Ninja_Card_${nameIn.value}.png`;
+                link.href = canvas.toDataURL("image/png", 1.0);
+                link.click();
+            }).catch(err => {
+                alert("Erreur lors de l'export. Vérifiez que vous êtes bien sur GitHub Pages.");
+                console.error(err);
+            });
+        }
+    </script>
 </body>
 </html>
