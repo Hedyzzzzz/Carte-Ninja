@@ -3,129 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinobi Card Designer Pro</title>
+    <title>Shinobi Designer Pro - Edition Ultime</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            /* Couleurs du thème UI */
-            --bg-dark: #0f0f0f;
-            --panel-bg: #1a1a1a;
-            --accent: #ff9800;
-            --border: #333;
-            
-            /* Variables de la Carte (Modifiables via JS) */
+            /* Couleurs */
             --text-color: #3e2723;
             --stat-color: #3e2723;
-            --name-top: 345px; --name-left: 250px;
-            --rank-top: 398px; --rank-left: 250px;
+            
+            /* Avatar */
             --av-top: 230px; --av-left: 250px; 
             --av-w: 300px; --av-h: auto;
-            --av-bright: 100%; --av-contrast: 100%; --av-gray: 0%;
+            --av-bright: 100%; --av-gray: 0%;
             
-            /* Stats Gauche */
+            /* Nom */
+            --name-top: 345px; --name-left: 250px; --name-size: 28px;
+            
+            /* Rang */
+            --rank-top: 398px; --rank-left: 250px; --rank-size: 22px;
+            
+            /* Stats GAUCHE */
             --sl-top: 488px; --sl-left: 175px; 
-            --sl-size: 8px; --sl-gap-h: 2px; --sl-gap-v: 31px;
+            --sl-size: 8px; 
+            --sl-gap-h: 2px; /* L'écart horizontal que tu voulais */
+            --sl-gap-v: 31px;
             
-            /* Stats Droite */
+            /* Stats DROITE */
             --sd-top: 488px; --sd-left: 395px; 
-            --sd-size: 8px; --sd-gap-h: 2px; --sd-gap-v: 31px;
+            --sd-size: 8px; 
+            --sd-gap-h: 2px; /* L'écart horizontal que tu voulais */
+            --sd-gap-v: 31px;
         }
 
-        * { box-sizing: border-box; transition: background 0.2s; }
+        * { box-sizing: border-box; }
         body { 
-            background: var(--bg-dark); 
-            color: #eee; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #0a0a0a; color: #eee; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
             margin: 0; display: flex; height: 100vh; overflow: hidden; 
         }
 
-        /* --- SIDEBAR --- */
+        /* --- BARRE LATERALE --- */
         .sidebar { 
-            width: 400px; background: var(--panel-bg); 
-            border-right: 2px solid var(--border); 
-            display: flex; flex-direction: column; 
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            width: 420px; background: #151515; 
+            border-right: 2px solid #252525; 
+            display: flex; flex-direction: column;
+            box-shadow: 10px 0 20px rgba(0,0,0,0.5);
         }
 
-        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); text-align: center; }
-        .sidebar-header h1 { font-size: 18px; margin: 0; color: var(--accent); letter-spacing: 2px; }
+        .sidebar-header { padding: 20px; background: #1a1a1a; border-bottom: 1px solid #333; text-align: center; }
+        .sidebar-header h2 { margin: 0; color: #ff9800; font-size: 18px; letter-spacing: 2px; }
 
-        .sidebar-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
+        .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 20px; }
 
-        .section { 
-            background: #222; border-radius: 8px; border: 1px solid var(--border);
-            padding: 15px; margin-bottom: 20px;
+        /* Sections */
+        .panel { 
+            background: #202020; border: 1px solid #333; 
+            border-radius: 10px; padding: 15px; margin-bottom: 20px; 
+        }
+        .panel-title { 
+            font-size: 11px; font-weight: bold; color: #ff9800; 
+            text-transform: uppercase; margin-bottom: 12px; 
+            display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid #333; padding-bottom: 5px;
         }
 
-        .section-title { 
-            font-size: 11px; font-weight: bold; color: var(--accent); 
-            text-transform: uppercase; margin-bottom: 15px; 
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        /* --- UI ELEMENTS --- */
-        label { font-size: 11px; color: #999; display: block; margin: 8px 0 4px 0; }
-        input[type="range"] { width: 100%; height: 4px; border-radius: 2px; accent-color: var(--accent); }
-        input[type="text"] { width: 100%; background: #333; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px; font-size: 13px; }
+        /* Elements UI */
+        label { font-size: 10px; color: #888; display: block; margin-top: 10px; }
+        .control-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
         
-        .control-group { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .btn-move { 
-            background: #333; border: 1px solid #444; color: white; 
-            width: 32px; height: 32px; cursor: pointer; border-radius: 4px;
-            display: flex; align-items: center; justify-content: center;
+        input[type="range"] { flex-grow: 1; accent-color: #ff9800; cursor: pointer; }
+        input[type="color"] { background: none; border: none; width: 30px; height: 30px; cursor: pointer; }
+        
+        .btn-dir { 
+            background: #2a2a2a; border: 1px solid #444; color: white; 
+            width: 28px; height: 28px; cursor: pointer; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
         }
-        .btn-move:hover { background: var(--accent); border-color: var(--accent); }
-        .btn-move:active { transform: scale(0.9); }
+        .btn-dir:hover { background: #ff9800; border-color: #ff9800; }
 
         .btn-export { 
-            width: 100%; padding: 16px; background: #2e7d32; color: white; 
-            border: none; border-radius: 6px; font-weight: bold; font-size: 15px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-            margin-top: 10px;
+            width: 100%; padding: 18px; background: #1b5e20; color: white; 
+            border: none; border-radius: 8px; font-weight: bold; font-size: 16px;
+            cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-export:hover { background: #388e3c; }
+        .btn-export:hover { background: #2e7d32; transform: translateY(-2px); }
 
-        /* --- VIEWER --- */
+        /* --- ZONE DE RENDU --- */
         .viewer { 
             flex-grow: 1; display: flex; align-items: center; justify-content: center; 
-            background: radial-gradient(circle, #1a1a1a 0%, #000 100%); position: relative;
+            background: #000; position: relative;
         }
 
-        .card-container {
+        .card-frame {
             position: relative; width: 500px; height: 730px;
             background-image: url('carte.jpg'); background-size: 100% 100%;
-            overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.8);
-            background-color: white; /* Fallback */
+            overflow: hidden; background-color: white;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
-        #avatar-img { 
+        #avatar-box { 
             position: absolute; top: var(--av-top); left: var(--av-left);
             width: var(--av-w); height: var(--av-h);
-            transform: translate(-50%, -50%); z-index: 1; pointer-events: none;
-            filter: brightness(var(--av-bright)) contrast(var(--av-contrast)) grayscale(var(--av-gray));
+            transform: translate(-50%, -50%); z-index: 1;
+            filter: brightness(var(--av-bright)) grayscale(var(--av-gray));
+            pointer-events: none;
         }
 
-        .overlay-input { 
+        .card-input { 
             position: absolute; background: transparent !important; border: none !important; 
             text-align: center; outline: none; z-index: 5; transform: translate(-50%, -50%);
-            color: var(--text-color); font-weight: bold; padding: 0;
+            color: var(--text-color); font-weight: bold;
         }
+        #name-field { top: var(--name-top); left: var(--name-left); font-family: 'Algerian', serif; font-size: var(--name-size); width: 450px; }
+        #rank-field { top: var(--rank-top); left: var(--rank-left); font-family: 'Agency FB', sans-serif; font-size: var(--rank-size); width: 350px; }
 
-        #name-field { top: var(--name-top); left: var(--name-left); font-family: 'Algerian', serif; font-size: 28px; width: 450px; }
-        #rank-field { top: var(--rank-top); left: var(--rank-left); font-family: 'Agency FB', sans-serif; font-size: 22px; width: 350px; }
-
-        /* Stats Layers */
+        /* Calques de Stats */
         .stats-layer { position: absolute; display: flex; flex-direction: column; z-index: 10; }
-        .l-side { top: var(--sl-top); left: var(--sl-left); gap: var(--sl-gap-v); }
-        .r-side { top: var(--sd-top); left: var(--sd-left); gap: var(--sd-gap-v); }
+        .side-l { top: var(--sl-top); left: var(--sl-left); gap: var(--sl-gap-v); }
+        .side-r { top: var(--sd-top); left: var(--sd-left); gap: var(--sd-gap-v); }
 
-        .stat-row { display: flex; align-items: center; height: 16px; }
-        .sq { border: 1px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.1); cursor: pointer; }
-        .sq.sl { width: var(--sl-size); height: var(--sl-size); margin-right: var(--sl-gap-h); }
-        .sq.sd { width: var(--sd-size); height: var(--sd-size); margin-right: var(--sd-gap-h); }
-        .sq.active { background: var(--stat-color) !important; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+        .s-row { display: flex; align-items: center; }
+        .square { border: 1px solid rgba(0,0,0,0.1); background: rgba(255,255,255,0.1); cursor: pointer; }
+        
+        /* Application des écarts horizontaux */
+        .square.sl { width: var(--sl-size); height: var(--sl-size); margin-right: var(--sl-gap-h); }
+        .square.sd { width: var(--sd-size); height: var(--sd-size); margin-right: var(--sd-gap-h); }
+        
+        .square.fill { background: var(--stat-color) !important; box-shadow: inset 0 0 3px rgba(0,0,0,0.2); }
 
     </style>
 </head>
@@ -133,166 +140,168 @@
 
     <div class="sidebar">
         <div class="sidebar-header">
-            <h1><i class="fa-solid fa-scroll"></i> SHINOBI EDITOR</h1>
+            <h2><i class="fa-solid fa-khanda"></i> SHINOBI ENGINE</h2>
         </div>
 
-        <div class="sidebar-content">
-            <button class="btn-export" onclick="doExport()"><i class="fa-solid fa-camera"></i> GÉNÉRER PNG</button>
-            <p style="font-size: 9px; text-align: center; color: #666; margin-top: 5px;">Fonctionnera à 100% après publication en ligne.</p>
+        <div class="sidebar-scroll">
+            <button class="btn-export" onclick="takeCapture()"><i class="fa-solid fa-download"></i> EXPORTER PNG</button>
 
-            <div class="section">
-                <div class="section-title"><i class="fa-solid fa-image"></i> Portrait</div>
-                <input type="file" id="fileInput" style="margin-bottom: 10px; font-size: 11px;">
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-font"></i> Configuration Textes</div>
                 
-                <label>Taille & Échelle</label>
-                <input type="range" min="50" max="600" value="300" oninput="set('--av-w', this.value+'px')">
-                <input type="range" min="0" max="600" value="0" oninput="set('--av-h', this.value == 0 ? 'auto' : this.value+'px')">
-
-                <label>Position Précise</label>
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <button class="btn-move" onclick="move('--av-top', -5)"><i class="fa-solid fa-chevron-up"></i></button>
-                    <div style="display: flex; gap: 40px;">
-                        <button class="btn-move" onclick="move('--av-left', -5)"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="btn-move" onclick="move('--av-left', 5)"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <button class="btn-move" onclick="move('--av-top', 5)"><i class="fa-solid fa-chevron-down"></i></button>
+                <label>Couleur du texte & des carrés</label>
+                <div class="control-row">
+                    <input type="color" value="#3e2723" oninput="set('--text-color', this.value)">
+                    <input type="color" value="#3e2723" oninput="set('--stat-color', this.value)">
                 </div>
 
-                <label>Filtres Photo</label>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div><label>Lumière</label><input type="range" min="0" max="200" value="100" oninput="set('--av-bright', this.value+'%')"></div>
-                    <div><label>Gris</label><input type="range" min="0" max="100" value="0" oninput="set('--av-gray', this.value+'%')"></div>
+                <label>Nom : Taille & Position (X,Y)</label>
+                <input type="range" min="10" max="70" value="28" oninput="set('--name-size', this.value+'px')">
+                <div class="control-row">
+                    <button class="btn-dir" onclick="move('--name-top', -2)">↑</button>
+                    <button class="btn-dir" onclick="move('--name-top', 2)">↓</button>
+                    <button class="btn-dir" onclick="move('--name-left', -2)">←</button>
+                    <button class="btn-dir" onclick="move('--name-left', 2)">→</button>
+                </div>
+
+                <label>Rang : Taille & Position (X,Y)</label>
+                <input type="range" min="10" max="50" value="22" oninput="set('--rank-size', this.value+'px')">
+                <div class="control-row">
+                    <button class="btn-dir" onclick="move('--rank-top', -2)">↑</button>
+                    <button class="btn-dir" onclick="move('--rank-top', 2)">↓</button>
+                    <button class="btn-dir" onclick="move('--rank-left', -2)">←</button>
+                    <button class="btn-dir" onclick="move('--rank-left', 2)">→</button>
                 </div>
             </div>
 
-            <div class="section">
-                <div class="section-title"><i class="fa-solid fa-chart-simple"></i> Statistiques Gauche</div>
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-user-ninja"></i> Portrait</div>
+                <input type="file" id="imgPicker" style="font-size: 10px; width: 100%;">
+                
+                <label>Dimension & Luminosité</label>
+                <input type="range" min="50" max="600" value="300" oninput="set('--av-w', this.value+'px')">
+                <input type="range" min="0" max="200" value="100" oninput="set('--av-bright', this.value+'%')">
+                
+                <label>Position de l'image</label>
+                <div class="control-row">
+                    <button class="btn-dir" onclick="move('--av-top', -5)">↑</button>
+                    <button class="btn-dir" onclick="move('--av-top', 5)">↓</button>
+                    <button class="btn-dir" onclick="move('--av-left', -5)">←</button>
+                    <button class="btn-dir" onclick="move('--av-left', 5)">→</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-align-left"></i> Bloc Stats Gauche</div>
                 <label>Taille des carrés</label>
                 <input type="range" min="4" max="25" value="8" oninput="set('--sl-size', this.value+'px')">
-                <label>Espace horizontal / Vertical</label>
-                <input type="range" min="0" max="15" value="2" oninput="set('--sl-gap-h', this.value+'px')">
+                
+                <label>Écart Horizontal (X)</label>
+                <input type="range" min="0" max="20" value="2" oninput="set('--sl-gap-h', this.value+'px')">
+                
+                <label>Écart Vertical (Y)</label>
                 <input type="range" min="10" max="50" value="31" oninput="set('--sl-gap-v', this.value+'px')">
-                <div class="control-group" style="margin-top: 10px;">
-                    <button class="btn-move" onclick="move('--sl-top', -1)">↑</button>
-                    <button class="btn-move" onclick="move('--sl-top', 1)">↓</button>
-                    <button class="btn-move" onclick="move('--sl-left', -1)">←</button>
-                    <button class="btn-move" onclick="move('--sl-left', 1)">→</button>
+                
+                <label>Position du bloc</label>
+                <div class="control-row">
+                    <button class="btn-dir" onclick="move('--sl-top', -2)">↑</button>
+                    <button class="btn-dir" onclick="move('--sl-top', 2)">↓</button>
+                    <button class="btn-dir" onclick="move('--sl-left', -2)">←</button>
+                    <button class="btn-dir" onclick="move('--sl-left', 2)">→</button>
                 </div>
             </div>
 
-            <div class="section">
-                <div class="section-title"><i class="fa-solid fa-chart-column"></i> Statistiques Droite</div>
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-align-right"></i> Bloc Stats Droite</div>
                 <label>Taille des carrés</label>
                 <input type="range" min="4" max="25" value="8" oninput="set('--sd-size', this.value+'px')">
-                <label>Espace horizontal / Vertical</label>
-                <input type="range" min="0" max="15" value="2" oninput="set('--sd-gap-h', this.value+'px')">
+                
+                <label>Écart Horizontal (X)</label>
+                <input type="range" min="0" max="20" value="2" oninput="set('--sd-gap-h', this.value+'px')">
+                
+                <label>Écart Vertical (Y)</label>
                 <input type="range" min="10" max="50" value="31" oninput="set('--sd-gap-v', this.value+'px')">
-                <div class="control-group" style="margin-top: 10px;">
-                    <button class="btn-move" onclick="move('--sd-top', -1)">↑</button>
-                    <button class="btn-move" onclick="move('--sd-top', 1)">↓</button>
-                    <button class="btn-move" onclick="move('--sd-left', -1)">←</button>
-                    <button class="btn-move" onclick="move('--sd-left', 1)">→</button>
-                </div>
-            </div>
-
-            <div class="section">
-                <div class="section-title"><i class="fa-solid fa-palette"></i> Couleurs Globales</div>
-                <div style="display: flex; gap: 15px;">
-                    <div style="flex:1"><label>Texte</label><input type="color" value="#3e2723" oninput="set('--text-color', this.value)"></div>
-                    <div style="flex:1"><label>Stats</label><input type="color" value="#3e2723" oninput="set('--stat-color', this.value)"></div>
+                
+                <label>Position du bloc</label>
+                <div class="control-row">
+                    <button class="btn-dir" onclick="move('--sd-top', -2)">↑</button>
+                    <button class="btn-dir" onclick="move('--sd-top', 2)">↓</button>
+                    <button class="btn-dir" onclick="move('--sd-left', -2)">←</button>
+                    <button class="btn-dir" onclick="move('--sd-left', 2)">→</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="viewer">
-        <div id="render-zone" class="card-container">
-            <img id="avatar-img" src="">
-            <input type="text" id="name-field" class="overlay-input" value="NOM DU PERSONNAGE">
-            <input type="text" id="rank-field" class="overlay-input" value="RANG S - SHINOBI">
+        <div id="capture-zone" class="card-frame">
+            <img id="avatar-box" src="">
+            <input type="text" id="name-field" class="card-input" value="NOM DU SHINOBI">
+            <input type="text" id="rank-field" class="card-input" value="RANG S - KAGE">
             
-            <div class="stats-layer l-side" id="l-container"></div>
-            <div class="stats-layer r-side" id="r-container"></div>
+            <div class="stats-layer side-l" id="l-side"></div>
+            <div class="stats-layer side-r" id="r-side"></div>
         </div>
     </div>
 
     <script>
         const root = document.documentElement;
 
-        // 1. Initialisation des Stats
-        function initStats(id, rows, sqClass) {
-            const container = document.getElementById(id);
-            rows.forEach(count => {
+        // Générateur de carrés dynamique
+        function generateSquares(containerId, rowCounts, squareClass, sizeVar) {
+            const container = document.getElementById(containerId);
+            rowCounts.forEach(count => {
                 const row = document.createElement('div');
-                row.className = 'stat-row';
+                row.className = 's-row';
                 for(let i=0; i<count; i++) {
                     const sq = document.createElement('div');
-                    sq.className = `sq ${sqClass}`;
+                    sq.className = `square ${squareClass}`;
+                    // Le clic gère le remplissage
                     sq.onclick = function() {
-                        const all = row.querySelectorAll('.sq');
-                        const index = Array.from(all).indexOf(this);
-                        all.forEach((s, idx) => s.classList.toggle('active', idx <= index));
-                        saveCurrentState();
-                    }
+                        const allSquaresInRow = row.querySelectorAll('.square');
+                        const index = Array.from(allSquaresInRow).indexOf(this);
+                        allSquaresInRow.forEach((s, idx) => s.classList.toggle('fill', idx <= index));
+                    };
                     row.appendChild(sq);
                 }
                 container.appendChild(row);
             });
         }
-        initStats('l-container', [5,5,5], 'sl');
-        initStats('r-container', [6,6,6], 'sd');
 
-        // 2. Gestion Image Avatar
-        document.getElementById('fileInput').addEventListener('change', function(e) {
+        // Initialisation : 3 lignes de 5 à gauche, 3 lignes de 6 à droite
+        generateSquares('l-side', [5, 5, 5], 'sl', '--sl-size');
+        generateSquares('r-side', [6, 6, 6], 'sd', '--sd-size');
+
+        // Gestion de l'image Portrait
+        document.getElementById('imgPicker').onchange = function(e) {
             const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = document.getElementById('avatar-img');
-                img.src = event.target.result;
-                img.style.display = 'block';
-            };
+            reader.onload = (ev) => { document.getElementById('avatar-box').src = ev.target.result; };
             reader.readAsDataURL(e.target.files[0]);
-        });
+        };
 
-        // 3. Fonctions de contrôle
-        function set(prop, val) { root.style.setProperty(prop, val); saveCurrentState(); }
+        // Fonctions de modification
+        function set(prop, val) { root.style.setProperty(prop, val); }
+        
         function move(prop, delta) {
             const current = parseFloat(getComputedStyle(root).getPropertyValue(prop)) || 0;
             root.style.setProperty(prop, (current + delta) + 'px');
-            saveCurrentState();
         }
 
-        // 4. Export PNG Pro
-        function doExport() {
-            const zone = document.getElementById('render-zone');
-            html2canvas(zone, {
-                scale: 3, // HD
+        // Fonction d'exportation PNG
+        function takeCapture() {
+            const area = document.getElementById('capture-zone');
+            html2canvas(area, {
+                scale: 3, // Haute résolution
                 useCORS: true,
                 allowTaint: true,
-                backgroundColor: null,
-                logging: false
+                backgroundColor: null
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'Shinobi_Card.png';
-                link.href = canvas.toDataURL('image/png');
+                link.download = 'Shinobi_Card_Export.png';
+                link.href = canvas.toDataURL("image/png");
                 link.click();
             });
         }
-
-        // 5. Système de Sauvegarde (LocalStorage)
-        function saveCurrentState() {
-            const settings = {};
-            const props = ['--name-top', '--name-left', '--text-color', '--stat-color', '--sl-top', '--sl-left', '--sd-top', '--sd-left'];
-            props.forEach(p => settings[p] = root.style.getPropertyValue(p));
-            localStorage.setItem('shinobiSettings', JSON.stringify(settings));
-        }
-
-        window.onload = () => {
-            const saved = localStorage.getItem('shinobiSettings');
-            if(saved) {
-                const settings = JSON.parse(saved);
-                for(let p in settings) { if(settings[p]) root.style.setProperty(p, settings[p]); }
-            }
-        };
     </script>
 </body>
 </html>
